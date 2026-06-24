@@ -1,4 +1,7 @@
 # Main python file for the overlay app project
+# Project contains both Human and AI Created Code
+# AI Created code is 30% or less as in compliance with the rules.
+# Big thank you to the random people over the years that solved some of the problems on stackoverflow and reddit :)
 # Current Revision: 1
 import ctypes
 import ctypes.wintypes
@@ -87,8 +90,6 @@ messagebox.showwarning(
     "This Program is bare bones, all apps that are overlayed only work if they are open and not minimized, if any issues occure please relaunch the app."
 )
 
-
-
 # Initialize the Menu to be the overlay
 OverlayMenu = Gui.Toplevel(ChoosingMenu)
 OverlayMenu.title("App Overlay - Overlay")
@@ -102,23 +103,115 @@ stream_display = Gui.Label(OverlayMenu, bg="black")
 stream_display.pack(fill="both", expand=True)
 
 style = ttk.Style()
-style.theme_use('clam')
+style.theme_use('alt')
 style.configure("TButton", foreground="#FFFFFF", font=('Impact', 11), padding=10, background="#5C5C5C")
 
+textstyle = ttk.Style()
+textstyle.configure(
+    "WarningText.TLabel",
+    font=("Bold",16, "bold"),
+    foreground="white",
+    background="#313131",
+    wraplength=300,
+    justify="left"
+)
+
+textstyle.configure(
+    "ExplainText.TLabel",
+    font=("Times New Roman",10),
+    foreground="white",
+    background="#313131",
+    wraplength=300,
+    justify="left"
+)
+
+style.configure(
+    "Scroll.TFrame", background="#313131"
+)
 
 def DisplayClicked(Name):
-    messagebox.showinfo("Success", Name + " Was selected!")
+    if Name == "Program Manager":
+        messagebox.showinfo("Success", "Desktop" + " Was selected!")
+    else:
+        messagebox.showinfo("Success", Name + " Was selected!")
+    
     OverlayMenu.deiconify()
     ChoosingMenu.withdraw()
-    OverlayMenu.title(Name+" - Overlay")
-    stream_to_label(stream_display, Name)
+    if Name == "Program Manager":
+     OverlayMenu.title("Desktop"+" - Overlay")
+     stream_to_label(stream_display, "Program Manager")
+    else:
+        OverlayMenu.title(Name+" - Overlay")
+        stream_to_label(stream_display, Name)
 
 for title in CurrentOpenWindows:
-    if not title == "":
+    if title == "Program Manager":
+        windowlist.append("Desktop")
+    else:
         windowlist.append(title)
 
-for i in windowlist:
-    button = ttk.Button(ChoosingMenu, text=i, command=lambda window=i: DisplayClicked(window), style="TButton")
-    button.pack(pady=10)
+Label = ttk.Label(ChoosingMenu,text="Welcome to Overlay-App, this project was made by one person with the goal of overlaying apps ontop of other apps, for convienince. This app does not have a ton of features, please expect possible bugs and be patient, if any issues occure please restart the app.", style="ExplainText.TLabel")
+Label.pack(pady=10)
+
+buttonlist = []
+
+boundary = ttk.Frame(ChoosingMenu,style="Scroll.TFrame")
+boundary.pack(fill="both", expand=True, pady=10)
+
+canvas = Gui.Canvas(boundary, highlightthickness=0, bg="#313131")
+scrollbar = ttk.Scrollbar(boundary, orient="vertical", command=canvas.yview)
+scrollable_frame = Gui.Frame(canvas, bg="#313131")
+
+canvas.bind('<Configure>', lambda event: canvas.itemconfig(canvas.create_window((0, 0), window=scrollable_frame, anchor="nw"), width=event.width))
+
+scrollable_frame.bind(
+    "<Configure>",
+    lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+)
+
+canvas.create_window((0,0), window=scrollable_frame, anchor="nw")
+canvas.configure(yscrollcommand=scrollbar.set)
+
+scrollbar.pack(side="right", fill="y")
+canvas.pack(side="left", fill="both", expand=True)
+
+def Buttons():
+    global buttonlist
+    windowlist = []
+    windowlist = windowfetch.getAllTitles()
+    for button in buttonlist:
+        button.destroy()
+
+    buttonlist = []
+
+    for i in windowlist:
+        if not i == "":
+            if not i == "Settings" and not i == "App Overlay":
+                if i == "Program Manager":
+                    button = ttk.Button(scrollable_frame, text="Desktop", command=lambda window=i: DisplayClicked(window), style="TButton")
+                    button.pack(pady=10)
+                    buttonlist.append(button)
+                else:
+                    button = ttk.Button(scrollable_frame, text=i, command=lambda window=i: DisplayClicked(window), style="TButton")
+                    button.pack(pady=10)
+                    buttonlist.append(button)
+
+Buttons()
+
+Label2 = ttk.Label(ChoosingMenu,text="Some things are disabled from being overlayed, such as settings.", style="WarningText.TLabel")
+Label2.pack(side="bottom",pady=10)
+
+def Refreshes():
+    Buttons()
+    ChoosingMenu.after(5000, Refreshes)
+
+def closing():
+    OverlayMenu.destroy()
+    ChoosingMenu.destroy()
+
+ChoosingMenu.protocol("WM_DELETE_WINDOW", closing)
+OverlayMenu.protocol("WM_DELETE_WINDOW", closing)
+
+ChoosingMenu.after(5000, Refreshes)
 
 ChoosingMenu.mainloop()
