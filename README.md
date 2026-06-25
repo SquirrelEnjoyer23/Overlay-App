@@ -4,7 +4,7 @@ Ever wanted to have a overlay of what ever you chose? Well at least i did. The g
 # AI Disclosure
 This app contains AI generated code, the ai generated code are the functions that allow for the actual mirroring, AI code accounts for only about 20% of code in the project!
 
-Other code in the project is present that was inspired off of places like stackoverflow and reddit, code was not directly used but used in the development process.
+Other parts of code in the project is present that was inspired off of places like stackoverflow and reddit, code was not directly used but used in the development process.
 
 # This app is Windows compatable only!
 ## (Known working on windows 11)
