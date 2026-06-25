@@ -18,5 +18,7 @@ Simply download the exe from the [releases](https://github.com/SquirrelEnjoyer23
 
 ## What does it look like?
 
-<img width="1712" height="893" alt="image" src="https://github.com/user-attachments/assets/92ba2cee-6529-4af6-8c8e-d2b76327466f" />
+
+## (Credit to @FlyingCow on youtube for designing the build, the video specifically has its thumbnail shown in the showcase picture)
+<img width="1920" height="1009" alt="DisplayImageOverlayApp" src="https://github.com/user-attachments/assets/39a6cb0d-2231-44f3-a6dc-076671f0714d" />
 
