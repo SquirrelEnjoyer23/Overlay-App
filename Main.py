@@ -1,8 +1,8 @@
 # Main python file for the overlay app project
 # Project contains both Human and AI Created Code
-# AI Created code is 30% or less as in compliance with the rules.
+# AI Created code is 30% or less as in compliance with the rules of the event.
 # Big thank you to the random people over the years that solved some of the problems on stackoverflow and reddit :)
-# Current Revision: 4
+# Current Revision: 5
 import ctypes
 import ctypes.wintypes
 import numpy as np
@@ -15,28 +15,29 @@ from PIL import Image, ImageTk
 from pathlib import Path
 
 filecontents = ""
-filepath = Path("OverlayAppSettings.txt")
-if filepath.is_file():
-    print("File exists")
-else:
-    print("File Doesnt exsist")
+folderpath = Path("Overlay-App")
+filepath = folderpath / "OverlayAppSettings.txt"
+
+if not folderpath.is_file():
+    folderpath.mkdir(parents=True, exist_ok=True)
+
+
+if not filepath.is_file():
+
     with open(filepath, "w") as file:
         file.write("True")
 
 
 with open(filepath, "r") as file:
     contents = file.read()
-    print(contents)
     if contents == "True":
         filecontents = "True"
     elif contents == "False":
         filecontents = "False"
     else:
-        print("File has invalid data")
         with open(filepath,"w") as file:
             file.write("True")
 
-print("Current Santised setting is: "+filecontents)
 ColorMode = "#313131"
 TextColor = "#FFFFFF"
 ButtonColor = "#5C5C5C"
@@ -118,7 +119,7 @@ ChoosingMenu.configure(bg=ColorMode)
 
 messagebox.showwarning(
     "App Overlay - Warning",
-    "This Program is bare bones, all apps that are overlayed only work if they are open and not minimized, if any issues occure please relaunch the app."
+    "This Program is bare bones, all apps that are overlayed only work if they are open and not minimized, if any issues occur please relaunch the app. Upon loading this app a folder and a text file is created in the same directory as the app, this is for settings to save."
 )
 
 # Initialize the Menu to be the overlay
@@ -184,19 +185,21 @@ for title in CurrentOpenWindows:
 
 
 def ColorChangeFunction():
-    print(filecontents)
-    if filecontents == "True":
-        with open(filepath, "w") as file:
-            file.write("False")
-    if filecontents == "False":
-        with open(filepath, "w") as file:
-            file.write("True")
-    messagebox.showinfo("Success", "Your change will appear next time this app is restarted.")
+    if filepath.is_file():
+        if filecontents == "True":
+            with open(filepath, "w") as file:
+                file.write("False")
+        if filecontents == "False":
+         with open(filepath, "w") as file:
+                file.write("True")
+        messagebox.showinfo("Success", "Your change will appear next time this app is restarted.")
+    else:
+        messagebox.showinfo("Error", "Couldnt save settings, encountered an error, please try again.")
 
 buttoncolor = ttk.Button(ChoosingMenu, text="Dark Mode/Light Mode", command=ColorChangeFunction, style="ColorButton.TButton")
 buttoncolor.place(relx=1.0, rely=1.0, anchor="se", x=10, y=10)
 
-Label = ttk.Label(ChoosingMenu,text="Welcome to Overlay-App, this project was made by one person with the goal of overlaying apps ontop of other apps, for convienince. This app does not have a ton of features, please expect possible bugs and be patient, if any issues occure please restart the app.", style="ExplainText.TLabel")
+Label = ttk.Label(ChoosingMenu,text="Welcome to Overlay-App, this project was made by one person with the goal of overlaying apps ontop of other apps, for convienince. This app does not have a ton of features, please expect possible bugs, if any issues occure please restart the app.", style="ExplainText.TLabel")
 Label.pack(pady=10)
 
 buttonlist = []
@@ -232,7 +235,7 @@ def Buttons():
 
     for i in windowlist:
         if not i == "":
-            if not i == "Settings" and not i == "App Overlay":
+            if not i == "Settings" and not i == "App Overlay" and not i == "Success" and not i == "Error":
                 if i == "Program Manager":
                     button = ttk.Button(scrollable_frame, text="Desktop", command=lambda window=i: DisplayClicked(window), style="TButton")
                     button.pack(pady=10)
@@ -244,7 +247,7 @@ def Buttons():
 
 Buttons()
 
-Label2 = ttk.Label(ChoosingMenu,text="Some things are disabled from being overlayed, such as settings.", style="WarningText.TLabel")
+Label2 = ttk.Label(ChoosingMenu,text="Some things are disabled from being overlayed, such as settings. (every 5 seconds it refreshes)", style="WarningText.TLabel")
 Label2.pack(side="bottom", anchor="sw",pady=10)
 
 def Refreshes():
