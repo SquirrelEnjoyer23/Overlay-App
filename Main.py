@@ -2,7 +2,7 @@
 # Project contains both Human and AI Created Code
 # AI Created code is 30% or less as in compliance with the rules.
 # Big thank you to the random people over the years that solved some of the problems on stackoverflow and reddit :)
-# Current Revision: 1
+# Current Revision: 3
 import ctypes
 import ctypes.wintypes
 import numpy as np
