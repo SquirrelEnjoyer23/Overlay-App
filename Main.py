@@ -2,7 +2,7 @@
 # Project contains both Human and AI Created Code
 # AI Created code is 30% or less as in compliance with the rules.
 # Big thank you to the random people over the years that solved some of the problems on stackoverflow and reddit :)
-# Current Revision: 3
+# Current Revision: 4
 import ctypes
 import ctypes.wintypes
 import numpy as np
@@ -12,10 +12,39 @@ import tkinter as Gui
 from tkinter import messagebox
 from tkinter import ttk
 from PIL import Image, ImageTk
+from pathlib import Path
 
+filecontents = ""
+filepath = Path("OverlayAppSettings.txt")
+if filepath.is_file():
+    print("File exists")
+else:
+    print("File Doesnt exsist")
+    with open(filepath, "w") as file:
+        file.write("True")
+
+
+with open(filepath, "r") as file:
+    contents = file.read()
+    print(contents)
+    if contents == "True":
+        filecontents = "True"
+    elif contents == "False":
+        filecontents = "False"
+    else:
+        print("File has invalid data")
+        with open(filepath,"w") as file:
+            file.write("True")
+
+print("Current Santised setting is: "+filecontents)
 ColorMode = "#313131"
 TextColor = "#FFFFFF"
 ButtonColor = "#5C5C5C"
+
+if filecontents == "False":
+    ColorMode = "#FFFFFF"
+    TextColor = "#3D3D3D"
+    ButtonColor = "#9E9E9E"
 
 # Set up ctypes shortcuts for Windows API
 User32 = ctypes.windll.user32
@@ -52,7 +81,6 @@ def capture_window_ctypes(window_title):
     img = np.frombuffer(buffer, dtype=np.uint8).reshape(h, w, 4)
     return cv2.cvtColor(img, cv2.COLOR_BGRA2RGB)
 
-
 def stream_to_label(label, target_title):
     """Grabs a frame, resizes it to the current overlay size, and updates the label."""
     # Safety check: Stop streaming if the overlay window was closed or hidden
@@ -78,7 +106,6 @@ def stream_to_label(label, target_title):
         
     # Schedule the next frame update (~30 FPS)
     label.after(33, lambda: stream_to_label(label, target_title))
-
 
 windowlist = []
 CurrentOpenWindows = windowfetch.getAllTitles()
@@ -109,6 +136,7 @@ stream_display.pack(fill="both", expand=True)
 style = ttk.Style()
 style.theme_use('alt')
 style.configure("TButton", foreground=TextColor, font=('Impact', 11), padding=10, background=ButtonColor)
+style.configure("ColorButton.TButton", foreground=TextColor, font=('Impact', 8), padding=10, background=ButtonColor)
 
 textstyle = ttk.Style()
 textstyle.configure(
@@ -153,6 +181,20 @@ for title in CurrentOpenWindows:
         windowlist.append("Desktop")
     else:
         windowlist.append(title)
+
+
+def ColorChangeFunction():
+    print(filecontents)
+    if filecontents == "True":
+        with open(filepath, "w") as file:
+            file.write("False")
+    if filecontents == "False":
+        with open(filepath, "w") as file:
+            file.write("True")
+    messagebox.showinfo("Success", "Your change will appear next time this app is restarted.")
+
+buttoncolor = ttk.Button(ChoosingMenu, text="Dark Mode/Light Mode", command=ColorChangeFunction, style="ColorButton.TButton")
+buttoncolor.place(relx=1.0, rely=1.0, anchor="se", x=10, y=10)
 
 Label = ttk.Label(ChoosingMenu,text="Welcome to Overlay-App, this project was made by one person with the goal of overlaying apps ontop of other apps, for convienince. This app does not have a ton of features, please expect possible bugs and be patient, if any issues occure please restart the app.", style="ExplainText.TLabel")
 Label.pack(pady=10)
@@ -203,7 +245,7 @@ def Buttons():
 Buttons()
 
 Label2 = ttk.Label(ChoosingMenu,text="Some things are disabled from being overlayed, such as settings.", style="WarningText.TLabel")
-Label2.pack(side="bottom",pady=10)
+Label2.pack(side="bottom", anchor="sw",pady=10)
 
 def Refreshes():
     Buttons()
