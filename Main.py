@@ -13,6 +13,10 @@ from tkinter import messagebox
 from tkinter import ttk
 from PIL import Image, ImageTk
 
+ColorMode = "#313131"
+TextColor = "#FFFFFF"
+ButtonColor = "#5C5C5C"
+
 # Set up ctypes shortcuts for Windows API
 User32 = ctypes.windll.user32
 Gdi32 = ctypes.windll.gdi32
@@ -83,7 +87,7 @@ CurrentOpenWindows = windowfetch.getAllTitles()
 ChoosingMenu = Gui.Tk()
 ChoosingMenu.title("App Overlay")
 ChoosingMenu.geometry("500x500")
-ChoosingMenu.configure(bg="#313131")
+ChoosingMenu.configure(bg=ColorMode)
 
 messagebox.showwarning(
     "App Overlay - Warning",
@@ -104,14 +108,14 @@ stream_display.pack(fill="both", expand=True)
 
 style = ttk.Style()
 style.theme_use('alt')
-style.configure("TButton", foreground="#FFFFFF", font=('Impact', 11), padding=10, background="#5C5C5C")
+style.configure("TButton", foreground=TextColor, font=('Impact', 11), padding=10, background=ButtonColor)
 
 textstyle = ttk.Style()
 textstyle.configure(
     "WarningText.TLabel",
     font=("Bold",16, "bold"),
-    foreground="white",
-    background="#313131",
+    foreground=TextColor,
+    background=ColorMode,
     wraplength=300,
     justify="left"
 )
@@ -119,14 +123,14 @@ textstyle.configure(
 textstyle.configure(
     "ExplainText.TLabel",
     font=("Times New Roman",10),
-    foreground="white",
-    background="#313131",
+    foreground=TextColor,
+    background=ColorMode,
     wraplength=300,
     justify="left"
 )
 
 style.configure(
-    "Scroll.TFrame", background="#313131"
+    "Scroll.TFrame", background=ColorMode
 )
 
 def DisplayClicked(Name):
@@ -158,9 +162,9 @@ buttonlist = []
 boundary = ttk.Frame(ChoosingMenu,style="Scroll.TFrame")
 boundary.pack(fill="both", expand=True, pady=10)
 
-canvas = Gui.Canvas(boundary, highlightthickness=0, bg="#313131")
+canvas = Gui.Canvas(boundary, highlightthickness=0, bg=ColorMode)
 scrollbar = ttk.Scrollbar(boundary, orient="vertical", command=canvas.yview)
-scrollable_frame = Gui.Frame(canvas, bg="#313131")
+scrollable_frame = Gui.Frame(canvas, bg=ColorMode)
 
 canvas.bind('<Configure>', lambda event: canvas.itemconfig(canvas.create_window((0, 0), window=scrollable_frame, anchor="nw"), width=event.width))
 
