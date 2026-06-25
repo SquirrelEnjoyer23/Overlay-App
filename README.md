@@ -1,6 +1,11 @@
 # Overlay-App
 Ever wanted to have a overlay of what ever you chose? Well at least i did. The goal of this project is to let you pick any open app you have and have it overlay on your screen, perfect for looking at notes while mastering a puzzle or building inspiration in minecraft!
 
+<img width="782" height="584" alt="Icon" src="https://github.com/user-attachments/assets/01917efe-3295-4ccb-8cd0-5768f9005281" />
+
+
+
+
 # This app is Windows compatable only!
 ## (Known working on windows 11)
 
